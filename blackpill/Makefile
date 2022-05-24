@@ -9,11 +9,12 @@ OBJECTS = $(C_SOURCES:.c=.o)
 
 all: final.elf
 
-final.elf: $(OBJECTS)
+final.elf: blackls.ld $(OBJECTS)
+	$(CC) -nostdlib -T $^ $(C_FLAGS) -Wl,-Map=final.map -o $@
 
 %.o: %.c Makefile
 	$(CC) -c $(C_FLAGS) $< -o $@
 
 .PHONY: clean
 clean:
-	rm -fR ./*.o
+	rm -fR ./*.o ./*.elf ./*.map
