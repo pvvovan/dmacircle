@@ -33,3 +33,4 @@
 
 *.elf
 *.map
+*.srec
