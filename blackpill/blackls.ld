@@ -10,12 +10,18 @@ MEMORY
 
 SECTIONS
 {
+	.isr_stack :
+	{
+		. = ALIGN(4);
+		KEEP(*(.isr_stack))
+		. = ALIGN(4);
+	} > FLASH
 	.isr_vector :
 	{
 		. = ALIGN(4);
 		KEEP(*(.isr_vector))
 		. = ALIGN(4);
-	}
+	} > FLASH
 	.text :
 	{
 		. = ALIGN(4);
