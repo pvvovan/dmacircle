@@ -5,25 +5,25 @@
 
 #define __BKPT(value)			__asm volatile ("bkpt "#value)
 
-extern volatile uint32_t _start_data;
-extern volatile uint32_t _end_data;
-extern volatile uint32_t _start_bss;
-extern volatile uint32_t _end_bss;
-extern const uint32_t _sidata;
+extern uintptr_t _start_data;
+extern uintptr_t _end_data;
+extern uintptr_t _start_bss;
+extern uintptr_t _end_bss;
+extern uintptr_t _sidata;
 
 static void init_memory(void)
 {
-	volatile uint32_t *ram_ptr = &_start_data;
-	const uint32_t *flash_ptr = &_sidata;
+	volatile uint32_t *ram_ptr = (volatile uint32_t *)&_start_data;
+	const uint32_t *flash_ptr = (const uint32_t *)&_sidata;
 
-	while (ram_ptr <= &_end_data) {
+	while (ram_ptr < (volatile uint32_t *)&_end_data) {
 		*ram_ptr = *flash_ptr;
 		ram_ptr++;
 		flash_ptr++;
 	}
 
-	ram_ptr = &_start_bss;
-	while (ram_ptr <= &_end_bss) {
+	ram_ptr = (volatile uint32_t *)&_start_bss;
+	while (ram_ptr < (const uint32_t *)&_end_bss) {
 		*ram_ptr = 0u;
 		ram_ptr++;
 	}

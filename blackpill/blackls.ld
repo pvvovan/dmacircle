@@ -29,6 +29,7 @@ SECTIONS
 		. = ALIGN(4);
 		*(.text)
 		*(.text*)
+		. = ALIGN(4);
 	} > FLASH
 
 	.rodata :
