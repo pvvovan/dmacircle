@@ -16,30 +16,47 @@ SECTIONS
 		KEEP(*(.isr_stack))
 		. = ALIGN(4);
 	} > FLASH
+
 	.isr_vector :
 	{
 		. = ALIGN(4);
 		KEEP(*(.isr_vector))
 		. = ALIGN(4);
 	} > FLASH
+
 	.text :
 	{
 		. = ALIGN(4);
 		*(.text)
+		*(.text*)
 	} > FLASH
+
 	.rodata :
 	{
 		. = ALIGN(4);
 		*(.rodata)
+		*(.rodata*)
+		. = ALIGN(4);
 	}
+
+	_sidata = LOADADDR(.data);
 	.data :
 	{
 		. = ALIGN(4);
+		_start_data = .;
 		*(.data)
+		*(.data*)
+		. = ALIGN(4);
+		_end_data = .;
 	} > RAM AT > FLASH
+
 	.bss :
 	{
 		. = ALIGN(4);
+		_start_bss = .;
 		*(.bss)
+		*(.bss*)
+		. = ALIGN(4);
+		_end_bss = .;
 	} > RAM
 }

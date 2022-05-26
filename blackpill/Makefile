@@ -1,5 +1,6 @@
 GCC_PATH=/mnt/sda1/pvv/gcc/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin
 CC=$(GCC_PATH)/arm-none-eabi-gcc
+SZ=$(GCC_PATH)/arm-none-eabi-size
 OBJ_COPY=$(GCC_PATH)/arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
 C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -mfloat-abi=soft
@@ -20,6 +21,7 @@ all: final.elf
 final.elf: blackls.ld $(OBJECTS)
 	$(CC) -nostdlib -T $^ $(C_FLAGS) -Wl,-Map=final.map -o $@
 	$(OBJ_COPY) -O srec $@ final.srec
+	$(SZ) $@
 
 %.o: %.c Makefile
 	$(CC) -c $(C_FLAGS) $< -o $@
