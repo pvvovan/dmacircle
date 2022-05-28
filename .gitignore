@@ -34,3 +34,5 @@
 *.elf
 *.map
 *.srec
+
+bluecube/build/
