@@ -3,7 +3,7 @@ CC=$(GCC_PATH)/arm-none-eabi-gcc
 SZ=$(GCC_PATH)/arm-none-eabi-size
 OBJ_COPY=$(GCC_PATH)/arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
-C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -mfloat-abi=soft $(C_DEFINES)
+C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -mfloat-abi=soft $(C_DEFINES)
 
 C_SOURCES = \
 main.c \
