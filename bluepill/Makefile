@@ -3,7 +3,7 @@ CC=$(GCC_PATH)/arm-none-eabi-gcc
 SZ=$(GCC_PATH)/arm-none-eabi-size
 OBJ_COPY=$(GCC_PATH)/arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
-C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -mfloat-abi=soft
+C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -mfloat-abi=soft $(C_DEFINES)
 
 C_SOURCES = \
 main.c \
@@ -11,6 +11,14 @@ startup.c
 
 ASM_SOURCES = \
 startstack.s
+
+C_INCLUDES = \
+-I. \
+-I../STM32CubeF1/Drivers/CMSIS/Include \
+-I../STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Include
+
+C_DEFINES =  \
+-DSTM32F103xB
 
 OBJECTS = $(C_SOURCES:.c=.o)
 
@@ -24,7 +32,7 @@ final.elf: bluels.ld $(OBJECTS)
 	$(SZ) $@
 
 %.o: %.c Makefile *.h
-	$(CC) -c $(C_FLAGS) $< -o $@
+	$(CC) -c $(C_FLAGS) $(C_INCLUDES) $< -o $@
 
 %.o: %.s Makefile
 	$(AS) -c $(C_FLAGS) $< -o $@
