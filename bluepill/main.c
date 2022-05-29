@@ -1,4 +1,39 @@
+#include <stdint.h>
+
 #include "main.h"
+#include "stm32f1xx.h"
+
+
+static uint32_t system_timer_ticks = 0u;
+void system_timer_isr(void)
+{
+	system_timer_ticks++;
+}
+
+static void init_system_clock(void)
+{
+	RCC->CR |= RCC_CR_HSEON; // Enable High Speed External clock
+	while ((RCC->CR & RCC_CR_HSERDY) == 0u) { } // wait until HSE oscillator is stable
+
+	FLASH->ACR |= FLASH_ACR_PRFTBE; // Enable the FLASH prefetch buffer
+	FLASH->ACR &= ~FLASH_ACR_LATENCY;
+	FLASH->ACR |= FLASH_ACR_LATENCY_2; // Set 2 wait states if 48MHz < SYSCLK <= 72MHz
+
+	RCC->CFGR |= RCC_CFGR_HPRE_DIV1; // Bits 7:4 HPRE: AHB prescaler
+	RCC->CFGR |= RCC_CFGR_PPRE2_DIV1; // Bits 13:11 PPRE2: APB high-speed prescaler (APB2)
+	RCC->CFGR |= RCC_CFGR_PPRE1_DIV2; // Bits 10:8 PPRE1: APB low-speed prescaler (APB1)
+	RCC->CFGR &= ~RCC_CFGR_PLLXTPRE; // Bit 17 PLLXTPRE: HSE divider for PLL entry
+	RCC->CFGR |= RCC_CFGR_PLLSRC; // Bit 16 PLLSRC: PLL entry clock source
+	RCC->CFGR |= RCC_CFGR_PLLMULL9; // Bits 21:18 PLLMUL: PLL multiplication factor
+
+	RCC->CR |= RCC_CR_PLLON; // Bit 24 PLLON: PLL enable
+	while ((RCC->CR & RCC_CR_PLLRDY) == 0u) { } // Bit 25 PLLRDY: PLL clock ready flag
+
+	RCC->CFGR &= ~RCC_CFGR_SW; // Bits 1:0 SW: System clock switch
+	RCC->CFGR |= RCC_CFGR_SW_PLL; // 10: PLL selected as system clock
+	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) { } // Bits 3:2 SWS: System clock switch status
+}
+
 
 const int c_data = 1;
 int i_data = 2;
@@ -9,8 +44,12 @@ static int s_bss;
 
 int main(void)
 {
+	init_system_clock(); // 8MHz HSE produces 72MHz CPU clock
+	SysTick_Config(72000000 / 10); // 10Hz system timer irq
+
 	while (s_data++) {
 		s_bss++;
 	}
+
 	return 0;
 }
