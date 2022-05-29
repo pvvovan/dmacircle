@@ -1,13 +1,16 @@
 #include <stdint.h>
 
 #include "main.h"
+#include "interrupts.h"
 #include "stm32f1xx.h"
 
 
-static uint32_t system_timer_ticks = 0u;
-void system_timer_isr(void)
+void delay_ds(uint32_t ds)
 {
-	system_timer_ticks++;
+	const uint32_t system_timer_ticks_at_start = get_system_timer_ticks();
+	while (get_system_timer_ticks() - system_timer_ticks_at_start < ds) {
+		;
+	} 
 }
 
 static void init_system_clock(void)
@@ -49,6 +52,7 @@ int main(void)
 
 	while (s_data++) {
 		s_bss++;
+		delay_ds(10);
 	}
 
 	return 0;

@@ -7,7 +7,8 @@ C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -pedantic -W
 
 C_SOURCES = \
 main.c \
-startup.c
+startup.c \
+interrupts.c
 
 ASM_SOURCES = \
 startstack.s
