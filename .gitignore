@@ -36,3 +36,4 @@
 *.srec
 
 bluecube/build/
+bluecube/.mxproject
