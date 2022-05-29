@@ -63,5 +63,6 @@ SECTIONS
 		__bss_end__ = _end_bss;
 		. = ALIGN(4);
 		end = .;
+		__end__ = .;
 	} > RAM
 }

@@ -8,7 +8,7 @@ C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -Wno-unused-
 C_SOURCES = \
 main.c \
 startup.c \
-syscalls.c
+# syscalls.c # use this if '--specs=nano.specs'
 
 ASM_SOURCES = \
 startstack.s
@@ -20,7 +20,7 @@ OBJECTS += $(ASM_SOURCES:.s=.o)
 all: final.elf
 
 final.elf: black_ls.ld $(OBJECTS)
-	$(CC) --specs=nano.specs -T $^ $(C_FLAGS) -Wl,-Map=final.map -o $@
+	$(CC) --specs=rdimon.specs -T $^ $(C_FLAGS) -Wl,-Map=final.map -o $@
 	$(OBJ_COPY) -O srec $@ final.srec
 	$(SZ) $@
 

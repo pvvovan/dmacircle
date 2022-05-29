@@ -2,6 +2,9 @@
 
 #include "main.h"
 
+extern void initialise_monitor_handles(void);
+
+
 const int c_data = 1;
 int i_data = 2;
 int i2_data = 1;
@@ -11,6 +14,8 @@ static int s_bss;
 
 int main(void)
 {
+	initialise_monitor_handles();
+
 	volatile double d = 1.1;
 	d *= 1.37;
 	fprintf(stdout, "demo start: %f\n", d);
@@ -18,5 +23,6 @@ int main(void)
 		s_bss++;
 	}
 	fprintf(stdout, "%s", "demo end\n");
+
 	return 0;
 }

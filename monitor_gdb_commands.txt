@@ -18,6 +18,7 @@ monitor mdw 0x20000000 4
 monitor bp 0x080001d4 2 hw
 monitor rbp 0x080001d4
 monitor bp
+monitor arm semihosting enable
 
 file final.elf
 load
