@@ -1,0 +1,30 @@
+../src/openocd -f interface/stlink.cfg -f target/stm32f1x.cfg
+openocd -f board/stm32f4discovery.cfg
+telnet localhost 4444
+
+bin/arm-none-eabi-gdb
+target extended-remote localhost:3333
+target remote localhost:3333
+monitor flash write_image erase final.elf
+
+monitor reset init
+monitor reset halt
+monitor shutdown
+monitor resume
+monitor halt
+monitor reset
+monitor mdw 0x08000000 1
+monitor mdw 0x20000000 4
+monitor bp 0x080001d4 2 hw
+monitor rbp 0x080001d4
+monitor bp
+
+file final.elf
+load
+continue
+next
+step
+disconnect
+quit
+info registers
+print <value>

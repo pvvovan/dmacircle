@@ -1,4 +1,4 @@
-GCC_PATH=/mnt/sda1/pvv/gcc/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin
+GCC_PATH=/mnt/sda1/pvv/gcc/gcc-arm-none-eabi-10.3-2021.07/bin
 CC=$(GCC_PATH)/arm-none-eabi-gcc
 SZ=$(GCC_PATH)/arm-none-eabi-size
 OBJ_COPY=$(GCC_PATH)/arm-none-eabi-objcopy
@@ -28,7 +28,7 @@ OBJECTS += $(ASM_SOURCES:.s=.o)
 all: final.elf
 
 final.elf: bluels.ld $(OBJECTS)
-	$(CC) -nostdlib -T $^ $(C_FLAGS) -Wl,-Map=final.map -o $@
+	$(CC) -nostdlib -T $^ $(C_FLAGS) -Wl,-Map,final.map -o $@
 	$(OBJ_COPY) -O srec $@ final.srec
 	$(SZ) $@
 
