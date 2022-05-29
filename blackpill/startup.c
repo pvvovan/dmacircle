@@ -3,6 +3,8 @@
 #include "main.h"
 
 
+void __libc_init_array(void);
+
 #define __BKPT(value)			__asm volatile ("bkpt "#value)
 
 extern uintptr_t _start_data;
@@ -35,6 +37,7 @@ void reset_handler(void)
 	asm volatile ("bkpt 0");
 
 	init_memory();
+	__libc_init_array();
 
 	main();
 	for ( ; ; ) {

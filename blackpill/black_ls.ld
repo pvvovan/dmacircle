@@ -55,9 +55,13 @@ SECTIONS
 	{
 		. = ALIGN(4);
 		_start_bss = .;
+		__bss_start__ = _start_bss;
 		*(.bss)
 		*(.bss*)
 		. = ALIGN(4);
 		_end_bss = .;
+		__bss_end__ = _end_bss;
+		. = ALIGN(4);
+		end = .;
 	} > RAM
 }

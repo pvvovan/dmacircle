@@ -28,3 +28,5 @@ disconnect
 quit
 info registers
 print <value>
+
+arm-none-eabi-objdump -h final.elf

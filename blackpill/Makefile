@@ -3,11 +3,12 @@ CC=$(GCC_PATH)/arm-none-eabi-gcc
 SZ=$(GCC_PATH)/arm-none-eabi-size
 OBJ_COPY=$(GCC_PATH)/arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
-C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -mfloat-abi=soft
+C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -Wno-unused-parameter -mfloat-abi=soft
 
 C_SOURCES = \
 main.c \
-startup.c
+startup.c \
+syscalls.c
 
 ASM_SOURCES = \
 startstack.s
@@ -18,8 +19,8 @@ OBJECTS += $(ASM_SOURCES:.s=.o)
 
 all: final.elf
 
-final.elf: blackls.ld $(OBJECTS)
-	$(CC) -nostdlib -T $^ $(C_FLAGS) -Wl,-Map=final.map -o $@
+final.elf: black_ls.ld $(OBJECTS)
+	$(CC) --specs=nano.specs -T $^ $(C_FLAGS) -Wl,-Map=final.map -o $@
 	$(OBJ_COPY) -O srec $@ final.srec
 	$(SZ) $@
 
