@@ -3,6 +3,7 @@
 #include "main.h"
 #include "interrupts.h"
 #include "stm32f1xx.h"
+#include "led_toggler.h"
 
 
 void delay_ds(uint32_t ds)
@@ -52,7 +53,8 @@ int main(void)
 
 	while (s_data++) {
 		s_bss++;
-		delay_ds(10);
+		delay_ds(5);
+		led_toggle();
 	}
 
 	return 0;

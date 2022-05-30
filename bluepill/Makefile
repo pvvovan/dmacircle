@@ -1,28 +1,36 @@
 GCC_PATH=/mnt/sda1/pvv/gcc/gcc-arm-none-eabi-10.3-2021.07/bin
 CC=$(GCC_PATH)/arm-none-eabi-gcc
+CXX=$(GCC_PATH)/arm-none-eabi-g++
 SZ=$(GCC_PATH)/arm-none-eabi-size
 OBJ_COPY=$(GCC_PATH)/arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
-C_FLAGS=-mcpu=cortex-m4 -mthumb -std=gnu18 -g -O0 -Og -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -mfloat-abi=soft $(C_DEFINES)
+
+WARN=-Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors
+CC_FLAGS=-mcpu=cortex-m4 -mthumb -g -O0 -Og -mfloat-abi=soft $(CC_DEFINES)
+C_FLAGS=-std=gnu18 $(CC_FLAGS) $(WARN)
+CXX_FLAGS=-std=gnu++17 $(CC_FLAGS) $(WARN)
 
 C_SOURCES = \
 main.c \
 startup.c \
 interrupts.c
 
+CXX_SOURCES = \
+led_toggler.cpp
+
 ASM_SOURCES = \
 startstack.s
 
-C_INCLUDES = \
+CC_INCLUDES = \
 -I. \
 -I../STM32CubeF1/Drivers/CMSIS/Include \
 -I../STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Include
 
-C_DEFINES =  \
+CC_DEFINES =  \
 -DSTM32F103xB
 
 OBJECTS = $(C_SOURCES:.c=.o)
-
+OBJECTS += $(CXX_SOURCES:.cpp=.o)
 OBJECTS += $(ASM_SOURCES:.s=.o)
 
 all: final.elf
@@ -33,7 +41,10 @@ final.elf: bluels.ld $(OBJECTS)
 	$(SZ) $@
 
 %.o: %.c Makefile *.h
-	$(CC) -c $(C_FLAGS) $(C_INCLUDES) $< -o $@
+	$(CC) -c $(C_FLAGS) $(CC_INCLUDES) $< -o $@
+
+%.o: %.cpp Makefile *.h *.hpp
+	$(CXX) -c $(CXX_FLAGS) $(CC_INCLUDES) $< -o $@
 
 %.o: %.s Makefile
 	$(AS) -c $(C_FLAGS) $< -o $@
