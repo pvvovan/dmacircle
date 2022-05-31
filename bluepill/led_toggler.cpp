@@ -1,12 +1,12 @@
 #include "led_toggler.h"
-#include "Gpio.hpp"
+#include "gpio.hpp"
 
 
-static Gpio gpio{};
+static gpio gpo{};
 
 static void init()
 {
-	gpio.Init<13>(GPIOC, Gpio::Mode::output);
+	gpo.Init<13>(GPIOC, gpio::output::general_push_pull, gpio::speed::max2MHz);
 }
 
 void led_toggle()
@@ -17,5 +17,5 @@ void led_toggle()
 		init();
 	}
 
-	gpio.Toggle<13>(GPIOC);
+	gpo.Toggle<13>(GPIOC);
 }

@@ -8,7 +8,7 @@ AS = $(CC) -x assembler-with-cpp
 WARN=-Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors
 CC_FLAGS=-mcpu=cortex-m4 -mthumb -g -O0 -Og -mfloat-abi=soft $(CC_DEFINES)
 C_FLAGS=-std=gnu18 $(CC_FLAGS) $(WARN)
-CXX_FLAGS=-std=gnu++17 $(CC_FLAGS) $(WARN)
+CXX_FLAGS=-std=gnu++17 -fno-threadsafe-statics $(CC_FLAGS) $(WARN)
 
 C_SOURCES = \
 main.c \
