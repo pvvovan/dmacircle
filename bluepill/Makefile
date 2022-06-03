@@ -6,9 +6,9 @@ OBJ_COPY=$(GCC_PATH)/arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
 
 WARN=-Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors
-CC_FLAGS=-mcpu=cortex-m4 -mthumb -g -O0 -Og -mfloat-abi=soft $(CC_DEFINES)
+CC_FLAGS=-mcpu=cortex-m3 -mthumb -g3 -O0 -Og -mfloat-abi=soft -fcallgraph-info -fstack-usage -ffunction-sections -fdata-sections --specs=nano.specs $(CC_DEFINES)
 C_FLAGS=-std=gnu18 $(CC_FLAGS) $(WARN)
-CXX_FLAGS=-std=gnu++17 -fno-threadsafe-statics $(CC_FLAGS) $(WARN)
+CXX_FLAGS=-std=gnu++17 -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit $(CC_FLAGS) $(WARN)
 
 C_SOURCES = \
 main.c \
@@ -36,7 +36,7 @@ OBJECTS += $(ASM_SOURCES:.s=.o)
 all: final.elf
 
 final.elf: bluels.ld $(OBJECTS)
-	$(CC) -nostdlib -T $^ $(C_FLAGS) -Wl,-Map,final.map -o $@
+	$(CXX) --specs=nosys.specs -static -T $^ $(CXX_FLAGS) -Wl,-Map,final.map -o $@ -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	$(OBJ_COPY) -O srec $@ final.srec
 	$(SZ) $@
 

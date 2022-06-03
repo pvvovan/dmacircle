@@ -31,6 +31,8 @@ static void init_memory(void)
 	}
 }
 
+void __libc_init_array(void);
+
 void reset_handler(void)
 {
 	__BKPT(0); // Set software breakpoint twice ;)
@@ -38,6 +40,7 @@ void reset_handler(void)
 	asm volatile ("bkpt 0");
 
 	init_memory();
+	__libc_init_array();
 
 	main(); // main() should never return
 	for ( ; ; ) {
