@@ -176,13 +176,6 @@ ifneq ($(strip $(CPP_DEPS)),)
 endif
 endif
 
--include ../makefile.defs
-
-OPTIONAL_TOOL_DEPS := \
-$(wildcard ../makefile.defs) \
-$(wildcard ../makefile.init) \
-$(wildcard ../makefile.targets) \
-
 
 BUILD_ARTIFACT_NAME := f446
 BUILD_ARTIFACT_EXTENSION := elf
@@ -245,5 +238,3 @@ warn-no-linker-script-specified:
 	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
 
 .PHONY: all clean dependents fail-specified-linker-script-missing warn-no-linker-script-specified
-
--include ../makefile.targets
