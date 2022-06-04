@@ -10,13 +10,13 @@ static void gpo_init()
 }
 
 
-volatile int myg_val = 11;
+volatile int glo_val = 11;
 int get_val()
 {
-	return myg_val;
+	return glo_val * 2;
 }
 
-volatile int glo_what = get_val();
+volatile int ini_val = get_val();
 
 void led_toggle()
 {
@@ -26,7 +26,7 @@ void led_toggle()
 		gpo_init();
 	}
 
-	glo_what++;
+	ini_val++;
 	gpo.Toggle<13>(GPIOC);
-	glo_what--;
+	ini_val--;
 }
