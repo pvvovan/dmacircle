@@ -78,8 +78,8 @@ all: main-build
 main-build: f446.elf secondary-outputs
 
 # Tool invocations
-f446.elf: $(OBJS) $(USER_OBJS) /home/vovan/STM32CubeIDE/workspace_1.7.0/f446/STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	$(GCC_PATH)arm-none-eabi-g++ -o "f446.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/vovan/STM32CubeIDE/workspace_1.7.0/f446/STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="f446.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+f446.elf: $(OBJS) $(USER_OBJS) ../STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	$(GCC_PATH)arm-none-eabi-g++ -o "f446.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"../STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="f446.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
