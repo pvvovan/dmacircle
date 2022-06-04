@@ -1,21 +1,41 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (9-2020-q2-update)
-################################################################################
 
 GCC_PATH=/mnt/sda1/pvv/gcc/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin/
 
--include ../makefile.init
-
 RM := rm -rf
 
+ELF_SRCS := 
+C_UPPER_SRCS := 
+CXX_SRCS := 
+C++_SRCS := 
+OBJ_SRCS := 
+S_SRCS := 
+CC_SRCS := 
+C_SRCS := 
+CPP_SRCS := 
+S_UPPER_SRCS := 
+O_SRCS := 
+OBJDUMP_LIST := 
+C_UPPER_DEPS := 
+S_DEPS := 
+C_DEPS := 
+OBJCOPY_BIN := 
+CC_DEPS := 
+SIZE_OUTPUT := 
+C++_DEPS := 
+EXECUTABLES := 
+OBJS := 
+CXX_DEPS := 
+S_UPPER_DEPS := 
+CPP_DEPS := 
+
+USER_OBJS :=
+LIBS :=
+
 # All of the sources participating in the build are defined here
--include sources.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
--include subdir.mk
--include objects.mk
+
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(strip $(CC_DEPS)),)
