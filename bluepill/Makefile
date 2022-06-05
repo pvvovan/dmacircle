@@ -14,7 +14,7 @@ C_FLAGS = -std=gnu18 $(CC_FLAGS) $(WARN)
 
 CXX_FLAGS = -std=gnu++17 -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit $(CC_FLAGS) $(WARN)
 
-LD_FLAGS = -specs=nano.specs -specs=nosys.specs -static -Wl,-Map=final.map,--cref -Wl,--gc-sections \
+LD_FLAGS = -specs=nano.specs -specs=nosys.specs -static -Wl,-Map=final.map,--cref \
 -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group $(WARN)
 
 C_SOURCES = \
