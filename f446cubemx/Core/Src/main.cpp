@@ -53,7 +53,13 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+volatile int glo_val = 11;
+int get_val()
+{
+	return glo_val * 2;
+}
 
+volatile int ini_val = get_val();
 /* USER CODE END 0 */
 
 /**
