@@ -1,18 +1,21 @@
-GCC_PATH=/mnt/sda1/pvv/gcc/gcc-arm-none-eabi-10.3-2021.07/bin/
-CC=$(GCC_PATH)arm-none-eabi-gcc
-CXX=$(GCC_PATH)arm-none-eabi-g++
-SZ=$(GCC_PATH)arm-none-eabi-size
-OBJ_COPY=$(GCC_PATH)arm-none-eabi-objcopy
+GCC_PATH = /mnt/sda1/pvv/gcc/gcc-arm-none-eabi-10.3-2021.07/bin/
+CC = $(GCC_PATH)arm-none-eabi-gcc
+CXX = $(GCC_PATH)arm-none-eabi-g++
+SZ = $(GCC_PATH)arm-none-eabi-size
+OBJ_COPY = $(GCC_PATH)arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
 
-WARN=-Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wno-pedantic
+WARN = -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
 
-CC_FLAGS=-mcpu=cortex-m3 -mthumb -g3 -O0 -Og -mfloat-abi=soft \
--fstack-usage -ffunction-sections -fdata-sections --specs=nano.specs $(CC_DEFINES) \
--fcallgraph-info
+CC_FLAGS = -mcpu=cortex-m3 -mthumb -g3 -O0 -Og -mfloat-abi=soft -gdwarf-2 \
+-fstack-usage -ffunction-sections -fdata-sections $(CC_DEFINES) -fcallgraph-info
 
-C_FLAGS=-std=gnu18 $(CC_FLAGS) $(WARN)
-CXX_FLAGS=-std=gnu++17 -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit $(CC_FLAGS) $(WARN)
+C_FLAGS = -std=gnu18 $(CC_FLAGS) $(WARN)
+
+CXX_FLAGS = -std=gnu++17 -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit $(CC_FLAGS) $(WARN)
+
+LD_FLAGS = -specs=nano.specs -specs=nosys.specs -static -Wl,-Map=final.map,--cref -Wl,--gc-sections \
+-Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group $(WARN)
 
 C_SOURCES = \
 main.c \
@@ -40,7 +43,7 @@ OBJECTS += $(ASM_SOURCES:.s=.o)
 all: final.elf
 
 final.elf: bluels.ld $(OBJECTS)
-	$(CXX) --specs=nosys.specs -static -T $^ $(CXX_FLAGS) -Wl,-Map,final.map -o $@ -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+	$(CXX) $(CXX_FLAGS) $(LD_FLAGS) -T $^ -o $@
 	$(OBJ_COPY) -O srec $@ final.srec
 	$(SZ) $@
 
