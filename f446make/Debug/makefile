@@ -61,14 +61,6 @@ C_SRCS += \
 CPP_SRCS += \
 ../Core/Src/main.cpp 
 
-C_DEPS += \
-./Core/Src/stm32f4xx_hal_msp.d \
-./Core/Src/stm32f4xx_hal_timebase_tim.d \
-./Core/Src/stm32f4xx_it.d \
-./Core/Src/syscalls.d \
-./Core/Src/sysmem.d \
-./Core/Src/system_stm32f4xx.d 
-
 OBJS += \
 ./Core/Src/main.o \
 ./Core/Src/stm32f4xx_hal_msp.o \
@@ -108,22 +100,8 @@ C_SRCS += \
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 ../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c 
 
-C_DEPS += \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.d \
-./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.d 
+C_DEPS = $(addprefix ./build/,$(C_SRCS:.c=.d))
+
 
 OBJS += \
 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o \
