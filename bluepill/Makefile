@@ -7,14 +7,14 @@ AS = $(CC) -x assembler-with-cpp
 
 WARN = -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
 
-CC_FLAGS = -mcpu=cortex-m3 -mthumb -g3 -O0 -Og -mfloat-abi=soft -gdwarf-2 \
+CC_FLAGS = -mcpu=cortex-m3 -mthumb -g3 -O0 -Og -mfloat-abi=softfp -gdwarf-2 -specs=nano.specs \
 -fstack-usage -ffunction-sections -fdata-sections $(CC_DEFINES) -fcallgraph-info
 
 C_FLAGS = -std=gnu18 $(CC_FLAGS) $(WARN)
 
 CXX_FLAGS = -std=gnu++17 -fno-threadsafe-statics -fno-exceptions -fno-rtti -fno-use-cxa-atexit $(CC_FLAGS) $(WARN)
 
-LD_FLAGS = -specs=nano.specs -specs=nosys.specs -static -Wl,-Map=final.map,--cref -Wl,--gc-sections \
+LD_FLAGS = -specs=nosys.specs -static -Wl,-Map=final.map,--cref -Wl,--gc-sections \
 -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group $(WARN)
 
 C_SOURCES = \
