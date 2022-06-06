@@ -1,8 +1,8 @@
-GCC_PATH = /mnt/sda1/pvv/gcc/gcc-arm-none-eabi-10.3-2021.07/bin/
-CC = $(GCC_PATH)arm-none-eabi-gcc
-CXX = $(GCC_PATH)arm-none-eabi-g++
-SZ = $(GCC_PATH)arm-none-eabi-size
-OBJ_COPY = $(GCC_PATH)arm-none-eabi-objcopy
+GCC_PATH = /mnt/sda1/pvv/gcc/gcc-arm-none-eabi-10.3-2021.07/bin
+CC = $(GCC_PATH)/arm-none-eabi-gcc
+CXX = $(GCC_PATH)/arm-none-eabi-g++
+SZ = $(GCC_PATH)/arm-none-eabi-size
+OBJ_COPY = $(GCC_PATH)/arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
 
 WARN = -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
@@ -14,7 +14,7 @@ C_FLAGS = -std=gnu18 $(CC_FLAGS) $(WARN)
 
 CXX_FLAGS = -std=gnu++17 -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit $(CC_FLAGS) $(WARN)
 
-LD_FLAGS = -specs=nano.specs -specs=nosys.specs -static -Wl,-Map=final.map,--cref \
+LD_FLAGS = -specs=nano.specs -specs=nosys.specs -static -Wl,-Map=final.map,--cref -Wl,--gc-sections \
 -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group $(WARN)
 
 C_SOURCES = \
@@ -58,4 +58,4 @@ final.elf: bluels.ld $(OBJECTS)
 
 .PHONY: clean
 clean:
-	rm -fR ./*.o ./*.elf ./*.map ./*.srec
+	rm -fR ./*.o ./*.elf ./*.map ./*.srec ./*.ci ./*.su

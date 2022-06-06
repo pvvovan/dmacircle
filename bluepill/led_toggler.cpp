@@ -10,13 +10,22 @@ static void gpo_init()
 }
 
 
-volatile int glo_val = 11;
+volatile int glo_val{11};
 int get_val()
 {
 	return glo_val * 2;
 }
 
 volatile int ini_val = get_val();
+
+class demo_class {
+public:
+	demo_class() {
+		ini_val = 44;
+	}
+};
+
+static demo_class cl{};
 
 void led_toggle()
 {
