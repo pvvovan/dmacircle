@@ -7,7 +7,7 @@ AS = $(CC) -x assembler-with-cpp
 
 WARN = -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
 
-CC_FLAGS = -mcpu=cortex-m3 -mthumb -g3 -O0 -Og -mfloat-abi=softfp -gdwarf-2 -specs=nano.specs \
+CC_FLAGS = -mcpu=cortex-m3 -mthumb -g3 -O0 -Og -mfloat-abi=soft -gdwarf-2 -specs=nano.specs \
 -fstack-usage -ffunction-sections -fdata-sections $(CC_DEFINES) -fcallgraph-info
 
 C_FLAGS = -std=gnu18 $(CC_FLAGS) $(WARN)
