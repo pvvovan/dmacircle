@@ -23,27 +23,26 @@ public:
 	template<uint8_t ... pins>
 	void Init(GPIO_TypeDef *port = GPIOA, output cnf = output::general_push_pull, speed mode = speed::max2MHz)
 	{
-		__IO uint32_t tmpreg;
+		/* I/O port x clock enable */
+		uint32_t RCC_APB2ENR_IOPxEN = 0u;
+
 		if (port == GPIOA) {
-			RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
-			tmpreg = RCC->APB2ENR & (~RCC_APB2ENR_IOPAEN);
+			RCC_APB2ENR_IOPxEN = RCC_APB2ENR_IOPAEN;
 		} else if (port == GPIOB) {
-			RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
-			tmpreg = RCC->APB2ENR & (~RCC_APB2ENR_IOPBEN);
+			RCC_APB2ENR_IOPxEN = RCC_APB2ENR_IOPBEN;
 		} else if (port == GPIOC) {
-			RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
-			tmpreg = RCC->APB2ENR & (~RCC_APB2ENR_IOPCEN);
+			RCC_APB2ENR_IOPxEN = RCC_APB2ENR_IOPCEN;
 		} else if (port == GPIOD) {
-			RCC->APB2ENR |= RCC_APB2ENR_IOPDEN;
-			tmpreg = RCC->APB2ENR & (~RCC_APB2ENR_IOPDEN);
+			RCC_APB2ENR_IOPxEN = RCC_APB2ENR_IOPDEN;
 		} else if (port == GPIOE) {
-			RCC->APB2ENR |= RCC_APB2ENR_IOPEEN;
-			tmpreg = RCC->APB2ENR & (~RCC_APB2ENR_IOPEEN);
+			RCC_APB2ENR_IOPxEN = RCC_APB2ENR_IOPEEN;
 		} else {
 			// TODO: report error
 		}
-		static_cast<void>(tmpreg);
 
+		RCC->APB2ENR |= RCC_APB2ENR_IOPxEN;
+		__IO uint32_t tmpreg = RCC->APB2ENR & (~RCC_APB2ENR_IOPxEN);
+		static_cast<void>(tmpreg);
 
 		uint32_t reg_crl = port->CRL;
 		uint32_t reg_crh = port->CRH;

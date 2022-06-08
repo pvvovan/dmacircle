@@ -1,4 +1,4 @@
-GCC_PATH =
+GCC_PATH = /mnt/sda1/pvv/gcc/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin/
 CC = $(GCC_PATH)arm-none-eabi-gcc
 CXX = $(GCC_PATH)arm-none-eabi-g++
 SZ = $(GCC_PATH)arm-none-eabi-size
