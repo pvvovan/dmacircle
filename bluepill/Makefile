@@ -23,7 +23,8 @@ startup.c \
 interrupts.c
 
 CXX_SOURCES = \
-led_toggler.cpp
+led_toggler.cpp \
+adc_handle.cpp
 
 ASM_SOURCES = \
 startstack.s

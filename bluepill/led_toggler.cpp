@@ -1,5 +1,6 @@
 #include "led_toggler.h"
 #include "gpio.hpp"
+#include "adc_handle.hpp"
 
 
 static gpio gpo{};
@@ -29,13 +30,15 @@ static demo_class cl{};
 
 void led_toggle()
 {
-	static bool gpio_ready = false;
-	if (!gpio_ready) {
-		gpio_ready = true;
+	static bool called_once{false};
+	if (!called_once) {
+		called_once = true;
 		gpo_init();
+		adc_init();
 	}
 
 	ini_val++;
 	gpo.Toggle<13>(GPIOC);
+	adc_convert();
 	ini_val--;
 }
