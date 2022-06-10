@@ -1,6 +1,6 @@
 #include "stm32f1xx.h"
-
 #include "adc_handle.hpp"
+
 
 void adc_init()
 {
@@ -40,8 +40,8 @@ void adc_init()
 	Before starting a calibration, the ADC must have been in power-on state (ADON bit = ‘1’) for
 	at least two ADC clock cycles. */
 	ADC1->CR2 |= ADC_CR2_ADON;
-	for (int i = 0; i < 10; i++) {
-		tmpreg = ADC1->CR2;
+	for (long i = 0; i < 512L * 16 * 8 * 3; i++) { // wait max possible cycles needed
+		asm volatile ("nop");
 	}
 	ADC1->CR2 |= ADC_CR2_CAL;
 	while (ADC1->CR2 & ADC_CR2_CAL) { } // wait for CAL:0 Calibration completed
