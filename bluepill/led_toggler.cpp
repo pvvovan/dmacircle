@@ -30,15 +30,22 @@ static demo_class cl{};
 
 void led_toggle()
 {
+	bool is_adc_poll = false;
 	static bool called_once{false};
 	if (!called_once) {
 		called_once = true;
 		gpo_init();
-		adc_init();
+		if (is_adc_poll) {
+			adc_init();
+		} else {
+			adc_start_dma();
+		}
 	}
 
 	ini_val++;
 	gpo.Toggle<13>(GPIOC);
-	adc_convert();
+	if (is_adc_poll) {
+		adc_convert();
+	}
 	ini_val--;
 }

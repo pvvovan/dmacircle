@@ -60,3 +60,42 @@ void adc_convert()
 
 	g_adc_voltage = static_cast<float>(ADC1->DR) * 3.3f / 0xFFF;
 }
+
+volatile uint32_t adc_dma_buffer[3][4] = { { 0u, }, };
+__IO uint32_t dma1_status;
+
+void adc_start_dma()
+{
+	// 1. Set the peripheral register address in the DMA_CPARx register. The data will be
+	// moved from/ to this address to/ from the memory after the peripheral event.
+	DMA1_Channel1->CPAR = ADC1->DR;
+
+	// 2. Set the memory address in the DMA_CMARx register. The data will be written to or
+	// read from this memory after the peripheral event.
+	DMA1_Channel1->CMAR = (uint32_t)&adc_dma_buffer[0];
+
+	// 3. Configure the total number of data to be transferred in the DMA_CNDTRx register.
+	// After each peripheral event, this value will be decremented.
+	DMA1_Channel1->CNDTR = sizeof(adc_dma_buffer) / (adc_dma_buffer[0][0]);
+
+	// 4. Configure the channel priority using the PL[1:0] bits in the DMA_CCRx register
+	DMA1_Channel1->CCR &= ~DMA_CCR_PL; // 00: Low
+
+	// 5. Configure data transfer direction, circular mode, peripheral & memory incremented
+	// mode, peripheral & memory data size, and interrupt after half and/or full transfer in the
+	// DMA_CCRx register
+	DMA1_Channel1->CCR &= ~DMA_CCR_MEM2MEM; // 0: Memory to memory mode disabled
+	DMA1_Channel1->CCR |= DMA_CCR_MSIZE_1; // MSIZE[1:0] Memory size 0b10 32-bits
+	DMA1_Channel1->CCR |= DMA_CCR_PSIZE_1; // PSIZE[1:0] Peripheral size 0b10 32-bits
+	DMA1_Channel1->CCR |= DMA_CCR_MINC; // 1: Memory increment mode enabled
+	DMA1_Channel1->CCR &= ~DMA_CCR_PINC; // 0: Peripheral increment mode disabled
+	DMA1_Channel1->CCR |= DMA_CCR_CIRC; // 1: Circular mode enabled
+	DMA1_Channel1->CCR &= ~DMA_CCR_DIR; // 0: Read from peripheral
+	DMA1_Channel1->CCR &= ~DMA_CCR_TEIE; // 0: Transfer error interrupt disabled
+	DMA1_Channel1->CCR &= ~DMA_CCR_HTIE; // 0: Half transfer interrupt disabled
+	DMA1_Channel1->CCR &= ~DMA_CCR_TCIE; // 0: Transfer complete interrupt disabled
+
+	// 6. Activate the channel by setting the ENABLE bit in the DMA_CCRx register.
+	DMA1_Channel1->CCR |= DMA_CCR_EN; // 1: Channel enabled
+	dma1_status = DMA1->ISR;
+}
