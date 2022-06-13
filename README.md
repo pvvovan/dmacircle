@@ -1,4 +1,4 @@
-STM32 demo application:
+#STM32 demo application
  - Makefile
  - Linker script
  - System timer
