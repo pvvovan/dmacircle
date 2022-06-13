@@ -5,3 +5,4 @@ STM32 demo application:
  - Linker script
  - System timer
  - ADC circular DMA
+ - C++ static initialization
