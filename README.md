@@ -5,3 +5,5 @@
  - ADC circular DMA
  - C++ static initialization
  - C++ GPIO driver
+ - Semihosting
+ - VSCodium debug
