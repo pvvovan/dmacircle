@@ -7,40 +7,35 @@
 
 // #define __BKPT(value)			__asm volatile ("bkpt "#value)
 
-
-void init_ram(volatile uint32_t *ram_ptr, const uint32_t *flash_ptr, volatile uint32_t *ram_end)
+static void copy_memory(volatile uint32_t *dest, const uint32_t *src, volatile uint32_t *dest_end)
 {
-	while (ram_ptr < ram_end) {
-		*ram_ptr = *flash_ptr;
-		ram_ptr++;
-		flash_ptr++;
+	while (dest < dest_end) {
+		*dest = *src;
+		dest++;
+		src++;
 	}
 }
-
 
 extern uintptr_t _siram_exec;
 extern uintptr_t _startram_exec;
 extern uintptr_t _endram_exec;
-
 static void init_ramtext(void)
 {
-	init_ram((volatile uint32_t *)&_startram_exec, (const uint32_t *)&_siram_exec,
-							(volatile uint32_t *)&_endram_exec);
+	copy_memory((volatile uint32_t *)&_startram_exec,
+			(const uint32_t *)&_siram_exec,
+			(volatile uint32_t *)&_endram_exec);
 }
-
 
 extern uintptr_t _start_data;
 extern uintptr_t _end_data;
 extern uintptr_t _start_bss;
 extern uintptr_t _end_bss;
 extern uintptr_t _sidata;
-
-static void init_memory(void)
+static void init_databss(void)
 {
 	volatile uint32_t *ram_ptr = (volatile uint32_t *)&_start_data;
 	const uint32_t *flash_ptr = (const uint32_t *)&_sidata;
-
-	init_ram(ram_ptr, flash_ptr, (volatile uint32_t *)&_end_data);
+	copy_memory(ram_ptr, flash_ptr, (volatile uint32_t *)&_end_data);
 
 	ram_ptr = (volatile uint32_t *)&_start_bss;
 	while (ram_ptr < (const uint32_t *)&_end_bss) {
@@ -49,22 +44,18 @@ static void init_memory(void)
 	}
 }
 
-
-typedef void (*init_data_func_t)(void);
-extern init_data_func_t __init_array_start, __init_array_end;
-
-void init_data()
+typedef void (*init_func_t)(void);
+extern init_func_t __init_array_start, __init_array_end;
+void init_variables()
 {
-    init_data_func_t *func_ptr = &__init_array_start;
+    init_func_t *func_ptr = &__init_array_start;
     while (func_ptr < &__init_array_end) {
         (*func_ptr)();
         func_ptr++;
     }
 }
 
-
 void __libc_init_array(void);
-
 void reset_handler(void)
 {
 	__BKPT(0); // Set software breakpoint twice ;)
@@ -72,9 +63,9 @@ void reset_handler(void)
 	asm volatile ("bkpt #0");
 
 	init_ramtext();
-	init_memory();
-	// init_data();		// init global and static data
-	__libc_init_array();	// init global and static data
+	init_databss();
+	// init_variables();		// init global and static variables
+	__libc_init_array();		// init global and static variables
 
 	main(); // main() should never return
 	for ( ; ; ) {
