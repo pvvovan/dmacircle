@@ -76,6 +76,17 @@ SECTIONS
 		PROVIDE_HIDDEN(__fini_array_end = .);
 	} > FLASH
 
+	_siram_exec = LOADADDR(.ram_exec);
+	.ram_exec :
+	{
+		. = ALIGN(4);
+		_startram_exec = .;
+		*(.ram_exec)
+		*(.ram_exec*)
+		. = ALIGN(4);
+		_endram_exec = .;
+	} > RAM AT > FLASH
+
 	_sidata = LOADADDR(.data);
 	.data :
 	{

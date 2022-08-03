@@ -43,7 +43,7 @@ OBJECTS += $(ASM_SOURCES:.s=.o)
 
 all: final.elf
 
-final.elf: bluels.ld $(OBJECTS)
+final.elf: blue_ls.ld $(OBJECTS)
 	$(CXX) $(CXX_FLAGS) $(LD_FLAGS) -T $^ -o $@
 	$(OBJ_COPY) -O srec $@ final.srec
 	$(SZ) $@

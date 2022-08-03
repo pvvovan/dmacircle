@@ -7,6 +7,28 @@
 
 // #define __BKPT(value)			__asm volatile ("bkpt "#value)
 
+
+void init_ram(volatile uint32_t *ram_ptr, const uint32_t *flash_ptr, volatile uint32_t *ram_end)
+{
+	while (ram_ptr < ram_end) {
+		*ram_ptr = *flash_ptr;
+		ram_ptr++;
+		flash_ptr++;
+	}
+}
+
+
+extern uintptr_t _siram_exec;
+extern uintptr_t _startram_exec;
+extern uintptr_t _endram_exec;
+
+static void init_ramtext(void)
+{
+	init_ram((volatile uint32_t *)&_startram_exec, (const uint32_t *)&_siram_exec,
+							(volatile uint32_t *)&_endram_exec);
+}
+
+
 extern uintptr_t _start_data;
 extern uintptr_t _end_data;
 extern uintptr_t _start_bss;
@@ -18,11 +40,7 @@ static void init_memory(void)
 	volatile uint32_t *ram_ptr = (volatile uint32_t *)&_start_data;
 	const uint32_t *flash_ptr = (const uint32_t *)&_sidata;
 
-	while (ram_ptr < (volatile uint32_t *)&_end_data) {
-		*ram_ptr = *flash_ptr;
-		ram_ptr++;
-		flash_ptr++;
-	}
+	init_ram(ram_ptr, flash_ptr, (volatile uint32_t *)&_end_data);
 
 	ram_ptr = (volatile uint32_t *)&_start_bss;
 	while (ram_ptr < (const uint32_t *)&_end_bss) {
@@ -44,6 +62,7 @@ void init_data()
     }
 }
 
+
 void __libc_init_array(void);
 
 void reset_handler(void)
@@ -52,6 +71,7 @@ void reset_handler(void)
 	asm volatile ("ldr sp, =_estack");
 	asm volatile ("bkpt #0");
 
+	init_ramtext();
 	init_memory();
 	// init_data();		// init global and static data
 	__libc_init_array();	// init global and static data

@@ -5,14 +5,7 @@
 #include "stm32f1xx.h"
 #include "led_toggler.h"
 
-
-void delay_ds(uint32_t ds)
-{
-	const uint32_t system_timer_ticks_at_start = get_system_timer_ticks();
-	while (get_system_timer_ticks() - system_timer_ticks_at_start < ds) {
-		;
-	} 
-}
+static void delay_ds(uint32_t ds) __attribute__((long_call, section(".ram_exec")));
 
 static void init_system_clock(void)
 {
@@ -58,4 +51,12 @@ int main(void)
 	}
 
 	return 0;
+}
+
+static void delay_ds(uint32_t ds)
+{
+	const uint32_t system_timer_ticks_at_start = get_system_timer_ticks();
+	while (get_system_timer_ticks() - system_timer_ticks_at_start < ds) {
+		;
+	}
 }
