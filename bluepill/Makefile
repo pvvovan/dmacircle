@@ -4,7 +4,7 @@ CXX = $(GCC_PATH)arm-none-eabi-g++
 SZ = $(GCC_PATH)arm-none-eabi-size
 OBJ_COPY = $(GCC_PATH)arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
-DEBUG = 0
+DEBUG = 1
 
 WARN = -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
 

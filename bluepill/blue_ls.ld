@@ -113,15 +113,16 @@ SECTIONS
 		__end__ = .;
 	} > RAM
 
-	/DISCARD/ :
-	{
-		*(.debug*)
-		*(.comment)
-		*(.ARM.attributes)
-		*(.iplt)
-		*(.rel.iplt)
-		*(.igot.plt)
-		*(.vfp11_veneer)
-		*(.v4_bx)
-	}
+
+/*	/DISCARD/ :			*/
+/*	{				*/
+/*		*(.debug*)		*/
+/*		*(.comment)		*/
+/*		*(.ARM.attributes)	*/
+/*		*(.iplt)		*/
+/*		*(.rel.iplt)		*/
+/*		*(.igot.plt)		*/
+/*		*(.vfp11_veneer)	*/
+/*	}				*/
+
 }
