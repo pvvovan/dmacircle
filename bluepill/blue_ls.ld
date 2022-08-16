@@ -32,6 +32,7 @@ SECTIONS
 		*(.glue_7)		/* glue arm to thumb code */
 		*(.glue_7t)		/* glue thumb to arm code */
 		*(.eh_frame)
+		*(.tm_clone_table)
 		KEEP(*(.init))
 		KEEP(*(.fini))
 		. = ALIGN(4);
@@ -111,4 +112,16 @@ SECTIONS
 		__bss_end__ = _end_bss;
 		__end__ = .;
 	} > RAM
+
+	/DISCARD/ :
+	{
+		*(.debug*)
+		*(.comment)
+		*(.ARM.attributes)
+		*(.iplt)
+		*(.rel.iplt)
+		*(.igot.plt)
+		*(.vfp11_veneer)
+		*(.v4_bx)
+	}
 }

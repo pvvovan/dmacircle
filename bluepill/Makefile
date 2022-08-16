@@ -4,18 +4,26 @@ CXX = $(GCC_PATH)arm-none-eabi-g++
 SZ = $(GCC_PATH)arm-none-eabi-size
 OBJ_COPY = $(GCC_PATH)arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
+DEBUG = 0
 
 WARN = -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
 
-CC_FLAGS = -mcpu=cortex-m3 -mthumb -g3 -O0 -Og -mfloat-abi=soft -gdwarf-2 -specs=nano.specs \
--fstack-usage -ffunction-sections -fdata-sections $(CC_DEFINES) -fcallgraph-info
+CC_FLAGS = -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -specs=nano.specs \
+-fstack-usage $(CC_DEFINES) -fcallgraph-info
 
 C_FLAGS = -std=gnu11 $(CC_FLAGS) $(WARN)
 
 CXX_FLAGS = -std=gnu++17 -fno-exceptions -fno-rtti -fno-use-cxa-atexit $(CC_FLAGS) $(WARN)
 
-LD_FLAGS = -specs=nosys.specs -static -Wl,-Map=final.map,--cref -Wl,--gc-sections \
+LD_FLAGS = -specs=nosys.specs -static -Wl,-Map=final.map,--cref \
 -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group $(WARN)
+
+ifeq ($(DEBUG), 1)
+CC_FLAGS += -g3 -O0 -Og -gdwarf-2
+else
+CC_FLAGS += -O2 -ffunction-sections -fdata-sections
+LD_FLAGS += -Wl,--orphan-handling=error -Wl,--gc-sections
+endif
 
 C_SOURCES = \
 main.c \
