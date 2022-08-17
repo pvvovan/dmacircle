@@ -123,6 +123,7 @@ SECTIONS
 /*		*(.rel.iplt)		*/
 /*		*(.igot.plt)		*/
 /*		*(.vfp11_veneer)	*/
+/*		*(.v4_bx)		*/
 /*	}				*/
 
 }

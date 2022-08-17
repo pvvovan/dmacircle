@@ -4,6 +4,7 @@ CXX = $(GCC_PATH)arm-none-eabi-g++
 SZ = $(GCC_PATH)arm-none-eabi-size
 OBJ_COPY = $(GCC_PATH)arm-none-eabi-objcopy
 AS = $(CC) -x assembler-with-cpp
+OUTDIR = out
 DEBUG = 1
 
 WARN = -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
@@ -45,26 +46,33 @@ CC_INCLUDES = \
 CC_DEFINES =  \
 -DSTM32F103xB
 
-OBJECTS = $(C_SOURCES:.c=.o)
-OBJECTS += $(CXX_SOURCES:.cpp=.o)
-OBJECTS += $(ASM_SOURCES:.s=.o)
+OBJECTS = $(addprefix $(OUTDIR)/, $(notdir $(C_SOURCES:.c=.o)))
+vpath %.c $(sort $(dir $(C_SOURCES)))
 
-all: final.elf
+OBJECTS += $(addprefix $(OUTDIR)/, $(notdir $(CXX_SOURCES:.cpp=.o)))
+vpath %.cpp $(sort $(dir $(CXX_SOURCES)))
 
-final.elf: blue_ls.ld $(OBJECTS)
+OBJECTS += $(addprefix $(OUTDIR)/, $(notdir $(ASM_SOURCES:.s=.o)))
+vpath %.s $(sort $(dir $(ASM_SOURCES)))
+
+
+$(shell test -d $(OUTDIR) || mkdir $(OUTDIR))
+all: $(OUTDIR)/final.elf
+
+$(OUTDIR)/final.elf: blue_ls.ld $(OBJECTS)
 	$(CXX) $(CXX_FLAGS) $(LD_FLAGS) -T $^ -o $@
 	$(OBJ_COPY) -O srec $@ final.srec
 	$(SZ) $@
 
-%.o: %.c Makefile *.h
+$(OUTDIR)/%.o: %.c Makefile *.h
 	$(CC) -c $(C_FLAGS) $(CC_INCLUDES) $< -o $@
 
-%.o: %.cpp Makefile *.h *.hpp
+$(OUTDIR)/%.o: %.cpp Makefile *.h *.hpp
 	$(CXX) -c $(CXX_FLAGS) $(CC_INCLUDES) $< -o $@
 
-%.o: %.s Makefile
+$(OUTDIR)/%.o: %.s Makefile
 	$(AS) -c $(C_FLAGS) $< -o $@
 
 .PHONY: clean
 clean:
-	rm -fR ./*.o ./*.elf ./*.map ./*.srec ./*.ci ./*.su
+	-rm -fR $(OUTDIR)
