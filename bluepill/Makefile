@@ -29,7 +29,11 @@ endif
 C_SOURCES = \
 main.c \
 startup.c \
-interrupts.c
+interrupts.c \
+../FreeRTOS-Kernel/tasks.c \
+../FreeRTOS-Kernel/list.c \
+../FreeRTOS-Kernel/portable/GCC/ARM_CM3/port.c \
+../FreeRTOS-Kernel/portable/MemMang/heap_1.c
 
 CXX_SOURCES = \
 led_toggler.cpp \
@@ -41,7 +45,9 @@ startstack.s
 CC_INCLUDES = \
 -iquote . \
 -I ../STM32CubeF1/Drivers/CMSIS/Include \
--I ../STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Include
+-I ../STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Include \
+-I ../FreeRTOS-Kernel/include \
+-I ../FreeRTOS-Kernel/portable/GCC/ARM_CM3
 
 CC_DEFINES =  \
 -DSTM32F103xB

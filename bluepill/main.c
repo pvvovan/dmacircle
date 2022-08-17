@@ -1,12 +1,16 @@
 #include <stdint.h>
 
 #include <stm32f1xx.h>
+#include <FreeRTOS.h>
+#include <task.h>
 
 #include "main.h"
 #include "led_toggler.h"
 #include "interrupts.h"
 
 static void delay_ds(uint32_t ds) __attribute__((long_call, section(".ram_exec")));
+static void task1(void *pvParameters);
+static void task2(void *pvParameters);
 
 static void init_system_clock(void)
 {
@@ -43,7 +47,11 @@ static int s_bss;
 int main(void)
 {
 	init_system_clock(); // 8MHz HSE produces 72MHz CPU clock
-	SysTick_Config(72000000 / 10); // 10Hz system timer irq
+	// SysTick_Config(72000000 / 10); // 10Hz system timer irq
+
+	xTaskCreate(task1, "task1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
+	xTaskCreate(task2, "task2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
+	vTaskStartScheduler();
 
 	while (s_data++) {
 		s_bss++;
@@ -59,5 +67,22 @@ static void delay_ds(uint32_t ds)
 	const uint32_t system_timer_ticks_at_start = get_system_timer_ticks();
 	while (get_system_timer_ticks() - system_timer_ticks_at_start < ds) {
 		;
+	}
+}
+
+static void task2(void *pvParameters)
+{
+	(void)pvParameters;
+	for ( ; ; ) {
+		vTaskDelay((TickType_t)1000 / portTICK_PERIOD_MS);
+	}
+}
+
+static void task1(void *pvParameters)
+{
+	(void)pvParameters;
+	for ( ; ; ) {
+		led_toggle();
+		vTaskDelay((TickType_t)500 / portTICK_PERIOD_MS);
 	}
 }

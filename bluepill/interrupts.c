@@ -6,10 +6,15 @@
 #include "main.h"
 
 
+void vPortSVCHandler(void);
+void xPortPendSVHandler(void);
+void xPortSysTickHandler(void);
+
 static __IO uint32_t system_timer_ticks = 0u;
 static void system_timer_isr(void)
 {
 	system_timer_ticks++;
+	xPortSysTickHandler();
 }
 
 uint32_t get_system_timer_ticks(void)
@@ -37,9 +42,9 @@ const uint32_t isr_vector_table[116] __attribute__ ((section(".isr_vector"))) =
 	0u,
 	0u,
 	0u,
-	(uint32_t)&default_handler,	// SVCall		0x0000 002C
+	(uint32_t)&vPortSVCHandler,	// SVCall		0x0000 002C
 	(uint32_t)&default_handler,	// Debug Monitor	0x0000_0030
 	0u,				// Reserved		0x0000_0034
-	(uint32_t)&default_handler,	// PendSV		0x0000_0038
+	(uint32_t)&xPortPendSVHandler,	// PendSV		0x0000_0038
 	(uint32_t)system_timer_isr	// System tick timer	0x0000_003C
 };
