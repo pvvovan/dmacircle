@@ -10,13 +10,13 @@ DEBUG = 1
 WARN = -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
 
 CC_FLAGS = -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -specs=nano.specs \
--fstack-usage $(CC_DEFINES) -fcallgraph-info
+-fstack-usage $(CC_DEFINES) -fcallgraph-info -MD -MP -MF"$(@:%.o=%.d)"
 
 C_FLAGS = -std=gnu11 $(CC_FLAGS) $(WARN)
 
 CXX_FLAGS = -std=gnu++17 -fno-exceptions -fno-rtti -fno-use-cxa-atexit $(CC_FLAGS) $(WARN)
 
-LD_FLAGS = -specs=nosys.specs -static -Wl,-Map=final.map,--cref \
+LD_FLAGS = -specs=nosys.specs -static -Wl,-Map=$(OUTDIR)/final.map,--cref \
 -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group $(WARN)
 
 ifeq ($(DEBUG), 1)
@@ -39,9 +39,9 @@ ASM_SOURCES = \
 startstack.s
 
 CC_INCLUDES = \
--I. \
--I../STM32CubeF1/Drivers/CMSIS/Include \
--I../STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Include
+-iquote . \
+-I ../STM32CubeF1/Drivers/CMSIS/Include \
+-I ../STM32CubeF1/Drivers/CMSIS/Device/ST/STM32F1xx/Include
 
 CC_DEFINES =  \
 -DSTM32F103xB
@@ -61,13 +61,13 @@ all: $(OUTDIR)/final.elf
 
 $(OUTDIR)/final.elf: blue_ls.ld $(OBJECTS)
 	$(CXX) $(CXX_FLAGS) $(LD_FLAGS) -T $^ -o $@
-	$(OBJ_COPY) -O srec $@ final.srec
+	$(OBJ_COPY) -O srec $@ $(OUTDIR)/final.srec
 	$(SZ) $@
 
-$(OUTDIR)/%.o: %.c Makefile *.h
+$(OUTDIR)/%.o: %.c Makefile
 	$(CC) -c $(C_FLAGS) $(CC_INCLUDES) $< -o $@
 
-$(OUTDIR)/%.o: %.cpp Makefile *.h *.hpp
+$(OUTDIR)/%.o: %.cpp Makefile
 	$(CXX) -c $(CXX_FLAGS) $(CC_INCLUDES) $< -o $@
 
 $(OUTDIR)/%.o: %.s Makefile
@@ -76,3 +76,6 @@ $(OUTDIR)/%.o: %.s Makefile
 .PHONY: clean
 clean:
 	-rm -fR $(OUTDIR)
+
+
+-include $(wildcard $(OUTDIR)/*.d)

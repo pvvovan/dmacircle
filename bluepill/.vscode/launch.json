@@ -4,7 +4,7 @@
 	    {
 		"name": "Pill Debug",
 		"cwd": "/mnt/sda1/pvv/github/openocd-code/tcl",
-		"executable": "${workspaceRoot}/final.elf",
+		"executable": "${workspaceRoot}/out/final.elf",
 		"request": "launch",
 		"type": "cortex-debug",
 		"servertype": "openocd",

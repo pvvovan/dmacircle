@@ -1,9 +1,10 @@
 #include <stdint.h>
 
+#include <stm32f1xx.h>
+
 #include "main.h"
-#include "interrupts.h"
-#include "stm32f1xx.h"
 #include "led_toggler.h"
+#include "interrupts.h"
 
 static void delay_ds(uint32_t ds) __attribute__((long_call, section(".ram_exec")));
 

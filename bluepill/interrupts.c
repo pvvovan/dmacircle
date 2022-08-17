@@ -1,8 +1,9 @@
 #include <stdint.h>
 
+#include <stm32f1xx.h>
+
 #include "startup.h"
 #include "main.h"
-#include "stm32f1xx.h"
 
 
 static __IO uint32_t system_timer_ticks = 0u;

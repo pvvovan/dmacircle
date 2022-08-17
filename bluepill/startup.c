@@ -1,8 +1,9 @@
 #include <stdint.h>
 
+#include <stm32f1xx.h>
+
 #include "main.h"
 #include "startup.h"
-#include "stm32f1xx.h"
 
 
 // #define __BKPT(value)			__asm volatile ("bkpt "#value)

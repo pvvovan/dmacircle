@@ -1,7 +1,7 @@
 #ifndef GPIO_HPP_
 #define GPIO_HPP_
 
-#include "stm32f1xx.h"
+#include <stm32f1xx.h>
 
 
 class gpio {
