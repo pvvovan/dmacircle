@@ -1,28 +1,24 @@
 {
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 	"version": "0.2.0",
 	"configurations": [
-	    {
-		"name": "Pill Debug",
-		"cwd": "/mnt/sda1/pvv/github/openocd-code/tcl",
-		"executable": "${workspaceRoot}/out/final.elf",
-		"request": "launch",
-		"type": "cortex-debug",
-		"servertype": "openocd",
-		"serverpath": "/mnt/sda1/pvv/github/openocd-code/src/openocd",
-		// This may need to be arm-none-eabi-gdb depending on your system
-		"gdbPath" : "/mnt/sda1/pvv/gcc/gcc-arm-none-eabi-10.3-2021.07/bin/arm-none-eabi-gdb",
-		"device": "BluePill",
-		"configFiles": [
-		    "interface/stlink.cfg",
-		    "target/stm32f1x.cfg"
-		],
-		"svdFile": "${workspaceRoot}/STM32F103.svd",
-		"runToMain": true,
-		// Work around for stopping at main on restart
-		"postRestartCommands": [
-		    "break main",
-		    "continue"
-		]
-	    }
+		{
+			"name": "Cortex Debug",
+			"cwd": "/mnt/sda1/pvv/github/openocd-code/tcl",
+			"executable": "${workspaceFolder}/out/final.elf",
+			"request": "launch",
+			"type": "cortex-debug",
+			"runToEntryPoint": "main",
+			"servertype": "openocd",
+			"serverpath": "/mnt/sda1/pvv/github/openocd-code/src/openocd",
+			"configFiles": [
+				"interface/stlink.cfg",
+				"target/stm32f1x.cfg"
+			],
+			"gdbPath": "/mnt/sda1/pvv/gcc/gcc-arm-none-eabi-10.3-2021.07/bin/arm-none-eabi-gdb",
+			"svdFile": "${workspaceRoot}/STM32F103.svd"
+		}
 	]
 }
