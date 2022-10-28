@@ -7,7 +7,7 @@ AS = $(CC) -x assembler-with-cpp
 OUTDIR = out
 DEBUG = 1
 
-WARN = -Wall -Wextra -pedantic -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
+WARN = -Wall -Wextra -Wsign-conversion -Wconversion -Werror=pedantic -pedantic-errors -Wpedantic
 
 CC_FLAGS = -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -specs=nano.specs \
 -fstack-usage $(CC_DEFINES) -fcallgraph-info -MD -MP -MF"$(@:%.o=%.d)"
@@ -20,7 +20,7 @@ LD_FLAGS = -specs=nosys.specs -static -Wl,-Map=$(OUTDIR)/final.map,--cref \
 -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group $(WARN)
 
 ifeq ($(DEBUG), 1)
-CC_FLAGS += -g3 -O0 -Og -gdwarf-2
+CC_FLAGS += -g3 -O0 -gdwarf-2
 else
 CC_FLAGS += -O2 -ffunction-sections -fdata-sections
 LD_FLAGS += -Wl,--orphan-handling=error -Wl,--gc-sections
